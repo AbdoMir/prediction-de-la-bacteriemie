@@ -117,24 +117,7 @@ Deux profils se superposent : l'**inflammation**, où la CRP et le fibrinogène 
 
 ---
 
-## Résultat 6 : compter les organes touchés apporte une information différente
-
-Une variable compte les anomalies dans six systèmes : plaquettes, rein, foie, coagulation, inflammation, immunité. Note de 0 à 6.
-
-Sa performance est comparable à celle de la meilleure variable brute, pas supérieure :
-
-| Découpage en 5 groupes de taille égale | Du plus bas au plus haut |
-|---|---|
-| Quintiles de `NEUR` | 3,3 % → 17,9 % |
-| Compte d'anomalies | 3,0 % → 15,4 % |
-
-AUC de 0,655 pour le compte contre 0,696 pour `NEUR`.
-
-**Son intérêt est ailleurs** : il n'est corrélé qu'à 0,31 avec `NEUR`. Il mesure le nombre d'organes touchés, là où `NEUR` mesure la réaction immunitaire. Les deux se complètent.
-
----
-
-## Résultat 7 : quelques valeurs sont fausses
+## Résultat 6 : quelques valeurs sont fausses
 
 | Variable | Anomalie | Décision |
 |---|---|---|
@@ -149,7 +132,7 @@ AUC de 0,655 pour le compte contre 0,696 pour `NEUR`.
 
 ---
 
-## Résultat 8 : des distributions à transformer
+## Résultat 7 : des distributions à transformer
 
 **34 variables sur 50 ont une asymétrie supérieure à 1 en valeur absolue**, donc une longue traîne. Les plus extrêmes : `PAMY` (75), `AMY` (52), `LYM` (52), `LIP` (47), `BASO` (43).
 
@@ -159,7 +142,7 @@ Leurs histogrammes sont illisibles en échelle normale.
 
 ---
 
-## Résultat 9 : les variables qui séparent réellement les malades
+## Résultat 8 : les variables qui séparent réellement les malades
 
 L'AUC mesure la capacité d'une variable à distinguer les deux groupes : 0,50 correspond au hasard, 0,70 est déjà correct en biologie.
 
@@ -168,7 +151,6 @@ L'AUC mesure la capacité d'une variable à distinguer les deux groupes : 0,50 c
 | `NEUR` (neutrophiles %) | **0,696** | 0,696 |
 | `LYM` (lymphocytes) | 0,686 | 0,683 |
 | `LYMR` (lymphocytes %) | 0,673 | 0,674 |
-| `nb_anomalies` (variable construite) | 0,655 | — |
 | `MONOR` (monocytes %) | 0,634 | 0,645 |
 | `BUN` (urée) | 0,630 | 0,633 |
 | `EOSR` (éosinophiles %) | 0,629 | 0,626 |
@@ -193,7 +175,7 @@ Le test de Mann-Whitney confirme le classement : 44 variables sur 51 sont signif
 3. Corriger les valeurs impossibles, garder les valeurs extrêmes réelles.
 4. Se servir des indices érythrocytaires pour reconstruire `RBC` et `HCT`, puis les retirer ; écarter les cinq pourcentages leucocytaires du seul modèle linéaire.
 5. Transformer au logarithme les variables asymétriques à droite, pour les modèles linéaires seulement.
-6. Ajouter le compte de défaillances d'organe et quatre rapports cliniques.
+6. Ajouter quatre rapports cliniques.
 7. Partir du profil leucocytaire, qui rassemble les meilleurs prédicteurs.
 8. Régler le seuil de décision sur le F1, et non le laisser à 0,5.
 

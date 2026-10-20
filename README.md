@@ -103,7 +103,7 @@ Le run final enregistre le modèle avec sa signature, les deux figures, le rappo
 - Graine aléatoire fixée à `SEED = 42` partout où un tirage intervient, pour des résultats reproductibles.
 - Jeu de test interne mis de côté avant tout pré-processing, avec un découpage stratifié (80 / 20).
 - Imputation, logarithme et mise à l'échelle calculés sur l'entraînement seulement, à l'intérieur d'un `Pipeline` scikit-learn, pour éviter toute fuite de données.
-- Déséquilibre des classes traité par `class_weight="balanced"` et par le réglage du seuil. Onze techniques de rééchantillonnage ont été testées, dont SMOTE et ADASYN : toutes font moins bien, le détail est dans `doc/modelisation.md`.
+- Déséquilibre des classes traité par `class_weight="balanced"` et par le réglage du seuil.
 - Le seuil de décision est choisi pour maximiser le F1, et non laissé à 0,5. Il peut être très éloigné de 0,5, ce qui est normal avec 8 % de positifs.
 - Les hyperparamètres sont mis en cache dans `models/`, sous un nom contenant une empreinte de l'espace de recherche. Modifier une borne relance la recherche automatiquement.
 - La préparation des données est écrite deux fois, dans le notebook et dans `Predicts.py`. **Toute modification de l'une doit être reportée dans l'autre**, sinon le jeu de test ne subit pas le même traitement que l'entraînement.

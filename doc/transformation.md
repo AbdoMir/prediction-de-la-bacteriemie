@@ -58,23 +58,6 @@ Ces trois variables sont des fonctions exactes de `HGB`, `HCT` et `RBC`. Une foi
 
 ## 4. Les variables construites
 
-### `nb_anomalies` — compte de défaillances d'organe
-
-Un critère par système, note de 0 à 6.
-
-| Critère | Système |
-|---|---|
-| `PLT` < 150 G/L | Plaquettes |
-| `CREA` > 1,3 mg/dl | Rein |
-| `GBIL` > 1,2 mg/dl | Foie |
-| `NT` < 70 % | Coagulation |
-| `ALB` < 35 g/L | Inflammation, nutrition |
-| `LYM` < 1 G/L | Immunité |
-
-Une infection localisée touche un organe, une bactériémie en touche plusieurs. Le compte capte cette dimension générale.
-
-À savoir : une analyse manquante compte comme normale, donc un patient peu exploré est sous-noté.
-
 ### Quatre rapports cliniques
 
 | Rapport | Lecture |
@@ -100,9 +83,9 @@ Le rapport reste manquant quand le dénominateur est nul ou absent — `LYM` vau
 
 `ALAT`, `AMY`, `AP`, `APTT`, `ASAT`, `BASO`, `BUN`, `CHOL`, `CK`, `CREA`, `CRP`, `EOS`, `GBIL`, `GGT`, `GLU`, `HS`, `LDH`, `LIP`, `LYM`, `MONO`, `NEU`, `PAMY`, `PDW`, `PHOS`, `PLT`, `RDW`, `TRIG`, `WBC`, et les quatre rapports construits.
 
-### Les 16 laissées telles quelles
+### Les 15 laissées telles quelles
 
-`AGE`, `ALB`, `CA`, `CHE`, `FIB`, `HCT`, `HGB`, `MG`, `MPV`, `NT`, `POTASS`, `RBC`, `SEX`, `SODIUM`, `TP`, `nb_anomalies`.
+`AGE`, `ALB`, `CA`, `CHE`, `FIB`, `HCT`, `HGB`, `MG`, `MPV`, `NT`, `POTASS`, `RBC`, `SEX`, `SODIUM`, `TP`.
 
 Deux cas méritent un mot. `POTASS` sort de la liste tout seul : son asymétrie tombe sous le seuil dès que les valeurs impossibles sont nettoyées. Et `NEUR` est asymétrique **à gauche**, donc le logarithme ne s'applique pas.
 

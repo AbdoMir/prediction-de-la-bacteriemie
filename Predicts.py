@@ -49,16 +49,8 @@ def _ratio(num: str, den: str) -> pl.Expr:
 
 
 def ajouter_variables(df: pl.DataFrame) -> pl.DataFrame:
-    """Compte de defaillances d'organe et rapports cliniques."""
+    """Rapports cliniques entre analyses deja presentes."""
     return df.with_columns(
-        nb_anomalies=pl.sum_horizontal([
-            (pl.col("PLT") < 150).cast(pl.Int8),        # plaquettes
-            (pl.col("CREA") > 1.3).cast(pl.Int8),       # rein
-            (pl.col("GBIL") > 1.2).cast(pl.Int8),       # foie
-            (pl.col("NT") < 70).cast(pl.Int8),          # coagulation
-            (pl.col("ALB") < 35).cast(pl.Int8),         # inflammation
-            (pl.col("LYM") < 1).cast(pl.Int8),          # immunite
-        ]),
         ratio_neu_lym=_ratio("NEU", "LYM"),      # marqueur d'infection bacterienne
         ratio_plt_lym=_ratio("PLT", "LYM"),      # inflammation systemique
         ratio_crp_alb=_ratio("CRP", "ALB"),      # inflammation contre denutrition
@@ -95,11 +87,11 @@ def predire(entree: Path, sortie: Path, chemin_modele: Path) -> None:
 
     paquet = joblib.load(chemin_modele)
 
-    # Les colonnes construites par preparer() portent le prefixe nb_ ou ratio_ :
+    # Les colonnes construites par preparer() portent le prefixe ratio_ :
     # les autres doivent deja etre dans le fichier, sinon la preparation echoue.
     # Les derivees s'y ajoutent : absentes du modele, mais indispensables a
     # reparer_sources(), donc exigees en entree.
-    construites = ("nb_", "ratio_")
+    construites = ("ratio_",)
     attendues = [c for c in paquet["colonnes"] if not c.startswith(construites)] + DERIVEES
     absentes = [c for c in attendues if c not in df.columns]
     if absentes:

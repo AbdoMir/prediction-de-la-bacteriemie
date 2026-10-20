@@ -81,11 +81,11 @@ Le seuil retenu peut être très éloigné de 0,5, et c'est normal : il se cale 
 
 | Modèle | F1 au seuil 0,5 | AUC | Précision moyenne |
 |---|---|---|---|
-| Super-learner | 0,049 | **0,793** | **0,299** |
-| Forêt aléatoire | **0,333** | 0,791 | 0,288 |
-| Régression logistique | 0,285 | 0,777 | 0,288 |
-| Arbres extrêmes | 0,321 | 0,774 | 0,262 |
-| Boosting | 0,323 | 0,773 | 0,259 |
+| Super-learner | 0,060 | **0,792** | **0,301** |
+| Forêt aléatoire | **0,326** | 0,785 | 0,289 |
+| Régression logistique | 0,284 | 0,777 | 0,295 |
+| Boosting | 0,321 | 0,771 | 0,271 |
+| Arbres extrêmes | 0,316 | 0,772 | 0,256 |
 
 ### Ce que l'optimisation apporte
 
@@ -100,30 +100,32 @@ Précision moyenne, avant puis après :
 
 Le boosting est le grand bénéficiaire. La forêt et les arbres extrêmes étaient déjà bien réglés par défaut.
 
+Ces deux colonnes proviennent de la recherche mise en cache, menée avant le retrait de `nb_anomalies`. L'espace de recherche n'ayant pas changé, le cache reste valide et les hyperparamètres sont relus tels quels ; les gains indiqués sont donc ceux mesurés à ce moment-là. Supprimer le fichier de `models/` relancerait la recherche.
+
 ### Après réglage du seuil
 
 | Modèle | Seuil retenu | F1 |
 |---|---|---|
-| Super-learner | 0,193 | **0,352** |
-| Forêt aléatoire | 0,527 | 0,341 |
-| Boosting | 0,647 | 0,337 |
-| Régression logistique | 0,649 | 0,334 |
-| Arbres extrêmes | 0,263 | 0,324 |
+| Super-learner | 0,205 | **0,352** |
+| Régression logistique | 0,689 | 0,337 |
+| Forêt aléatoire | 0,537 | 0,336 |
+| Boosting | 0,666 | 0,332 |
+| Arbres extrêmes | 0,241 | 0,328 |
 
-Le super-learner devance la forêt de 0,011. L'écart reste inférieur à la variabilité d'un pli de validation croisée à l'autre, qui est de l'ordre de 0,02 à 0,04 : il faut donc rester prudent. Mais la forêt est bien plus rapide, ce qui reste un argument si le temps de calcul devient contraignant.
+Le super-learner devance la régression logistique de 0,015. L'écart reste inférieur à la variabilité d'un pli de validation croisée à l'autre, qui est de l'ordre de 0,02 à 0,04 : il faut donc rester prudent. Mais la forêt est bien plus rapide, ce qui reste un argument si le temps de calcul devient contraignant.
 
 ### Évaluation finale sur le jeu de test
 
-Modèle retenu : le super-learner, au seuil de 0,193.
+Modèle retenu : le super-learner, au seuil de 0,205.
 
 | Mesure | Valeur |
 |---|---|
-| F1 | **0,354** |
-| Précision | 0,307 |
-| Rappel | 0,418 |
-| AUC | 0,773 |
+| F1 | **0,338** |
+| Précision | 0,304 |
+| Rappel | 0,381 |
+| AUC | 0,775 |
 
-Lecture clinique : parmi les patients signalés par le modèle, environ trois sur dix ont réellement une bactériémie, contre huit sur cent dans la population de départ. Le modèle en détecte un peu plus de quatre sur dix.
+Lecture clinique : parmi les patients signalés par le modèle, environ trois sur dix ont réellement une bactériémie, contre huit sur cent dans la population de départ. Le modèle en détecte près de quatre sur dix.
 
 Un F1 de 0,35 paraît faible, mais le problème est difficile : les deux groupes se recouvrent largement, parce que tous ces patients étaient déjà suspects d'infection.
 
@@ -135,13 +137,13 @@ Mesuré par permutation : on mélange les valeurs d'une colonne au hasard et on 
 
 | Variable | Perte |
 |---|---|
-| `GLU` (glycémie) | 0,0793 |
-| `nb_anomalies` (variable construite) | 0,0788 |
-| `AGE` | 0,0734 |
-| `SODIUM` | 0,0598 |
-| `CHE` (cholinestérase) | 0,0581 |
+| `GLU` (glycémie) | 0,1182 |
+| `AGE` | 0,1071 |
+| `SODIUM` | 0,0957 |
+| `CHE` (cholinestérase) | 0,0926 |
+| `CRP` | 0,0906 |
 
-Deux remarques. Le profil est **plat** : aucune variable ne domine, le signal est réparti sur beaucoup d'analyses. Et notre variable construite arrive deuxième, ce qui confirme qu'elle est réellement utilisée.
+Deux remarques. Le profil est **plat** : aucune variable ne domine, le signal est réparti sur beaucoup d'analyses. Et le premier rapport construit, `ratio_crp_alb`, n'arrive qu'en neuvième position, avec 0,0768.
 
 Les pertes se tenant dans un intervalle très resserré, c'est la composition du groupe de tête qu'il faut retenir, pas son ordre exact.
 
@@ -153,12 +155,9 @@ Attention à l'interprétation : deux variables redondantes se partagent le mér
 
 | Piste | Résultat |
 |---|---|
-| Rééchantillonnage, onze variantes dont SMOTE et ADASYN | Toutes moins bonnes que la pondération des classes |
 | Donner les variables brutes au super-learner en plus des probabilités | F1 plus faible qu'avec les seules probabilités |
 | Miroir logarithmique de `NEUR` | Corrige la distribution, aucun effet sur le score |
 | Compteurs de valeurs manquantes par panel | Redondants avec les indicateurs de l'imputation |
-
-Sur le rééchantillonnage, le motif est net : plus une technique invente des positifs, plus elle nuit. Les méthodes qui se contentent de nettoyer sont neutres. L'explication tient à la forme des données — dans la zone où les deux classes se recouvrent, il n'y a pas de frontière à affiner, il y a du bruit, et y fabriquer des patients synthétiques amplifie ce bruit.
 
 ---
 
