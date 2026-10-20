@@ -2,8 +2,6 @@
 
 Tous les chiffres cités sont produits par une cellule de `notebook/1.EDA.ipynb`.
 
----
-
 ## L'objectif
 
 À partir d'une simple prise de sang, prédire si l'hémoculture d'un patient révélera une bactérie.
@@ -11,8 +9,6 @@ Tous les chiffres cités sont produits par une cellule de `notebook/1.EDA.ipynb`
 L'hémoculture est longue et peu rentable : la grande majorité des prélèvements revient négative. Un modèle de risque bâti sur des analyses de routine aide à repérer les patients à très faible risque.
 
 Le classement du défi se fait au **F1 score**, puis à la précision en cas d'égalité. Il faut donc détecter le maximum de bactériémies sans multiplier les fausses alertes.
-
----
 
 ## Les chiffres clés
 
@@ -24,15 +20,11 @@ Le classement du défi se fait au **F1 score**, puis à la précision en cas d'�
 | Doublons | **aucun** |
 | Patients avec un bilan complet | **3 197**, soit **27 %** |
 
----
-
 ## Résultat 1 : les classes sont très déséquilibrées
 
 Sur 100 patients, 8 seulement ont une bactériémie. Un modèle qui répondrait « non » à tout le monde aurait 92 % de bonnes réponses en étant inutile.
 
 **Ce qu'on en fait** : pondérer les classes et régler le seuil de décision au lieu de garder 0,5.
-
----
 
 ## Résultat 2 : les données manquantes suivent une logique
 
@@ -50,8 +42,6 @@ Le dendrogramme des manquants fait apparaître **11 groupes** correspondant aux 
 
 **Ce qu'on en fait** : aucune suppression de patients, on en perdrait 73 %. Imputation accompagnée d'un indicateur de manquant.
 
----
-
 ## Résultat 3 : l'absence d'une analyse est parfois plus parlante que sa valeur
 
 | | Plaquettes médianes | Part en thrombopénie |
@@ -64,8 +54,6 @@ Quand l'automate ne calcule pas les indices plaquettaires, c'est qu'il n'a pas a
 C'est la définition du mécanisme MNAR : le fait qu'une donnée manque dépend de la valeur qu'on aurait mesurée.
 
 **Une hypothèse écartée** : `PAMY` n'est pas un dosage de deuxième intention. Elle est présente chez 70 % des patients à amylase normale contre 68 % à amylase élevée, donc prescrite avec `AMY` et non après.
-
----
 
 ## Résultat 4 : des variables font double emploi
 
@@ -93,8 +81,6 @@ Et leur somme vaut exactement 100 : `NEUR` = 100 − (`LYMR` + `MONOR` + `EOSR` 
 
 **Ce qu'on en fait** : les indices érythrocytaires servent d'abord à reconstruire `RBC` et `HCT` là où ils manquent, puis sont retirés. Les cinq pourcentages sont écartés du seul modèle linéaire ; les arbres les gardent. Détail dans [transformation.md](transformation.md).
 
----
-
 ## Résultat 5 : une population de patients déjà fragiles
 
 | Anomalie | Part des patients |
@@ -115,8 +101,6 @@ Deux profils se superposent : l'**inflammation**, où la CRP et le fibrinogène 
 
 **La difficulté** : tous ces patients ont eu une hémoculture, donc le médecin suspectait déjà une infection. Il n'y a aucun sujet sain dans les données. Nous devons distinguer une bactériémie d'une infection localisée, pas d'un patient en bonne santé. C'est pourquoi les deux groupes se chevauchent autant, et pourquoi le réglage du seuil est décisif.
 
----
-
 ## Résultat 6 : quelques valeurs sont fausses
 
 | Variable | Anomalie | Décision |
@@ -130,8 +114,6 @@ Deux profils se superposent : l'**inflammation**, où la CRP et le fibrinogène 
 
 **Une limite de méthode** : les données ont été bruitées colonne par colonne pour protéger la confidentialité. L'écart moyen entre `HCT` mesuré et recalculé est de 0,76 point. On ne peut donc pas trancher sur une valeur individuelle au seul motif qu'elle s'écarte de son recalcul.
 
----
-
 ## Résultat 7 : des distributions à transformer
 
 **34 variables sur 50 ont une asymétrie supérieure à 1 en valeur absolue**, donc une longue traîne. Les plus extrêmes : `PAMY` (75), `AMY` (52), `LYM` (52), `LIP` (47), `BASO` (43).
@@ -139,8 +121,6 @@ Deux profils se superposent : l'**inflammation**, où la CRP et le fibrinogène 
 Leurs histogrammes sont illisibles en échelle normale.
 
 **Ce qu'on en fait** : passage au logarithme pour les modèles linéaires seulement, les arbres découpant sur des seuils. Après nettoyage, 32 variables sont effectivement transformées. Détail dans [transformation.md](transformation.md).
-
----
 
 ## Résultat 8 : les variables qui séparent réellement les malades
 
@@ -166,8 +146,6 @@ L'AUC mesure la capacité d'une variable à distinguer les deux groupes : 0,50 c
 
 Le test de Mann-Whitney confirme le classement : 44 variables sur 51 sont significatives. Sur les corrélations de Spearman entre les dix meilleures, deux paires seulement font double emploi, `NEUR` et `LYMR` (−0,91) et `EOS` et `EOSR` (0,96).
 
----
-
 ## Ce que l'analyse nous a appris pour la suite
 
 1. Ne supprimer aucun patient.
@@ -178,8 +156,6 @@ Le test de Mann-Whitney confirme le classement : 44 variables sur 51 sont signif
 6. Ajouter quatre rapports cliniques.
 7. Partir du profil leucocytaire, qui rassemble les meilleurs prédicteurs.
 8. Régler le seuil de décision sur le F1, et non le laisser à 0,5.
-
----
 
 ## Les documents du projet
 

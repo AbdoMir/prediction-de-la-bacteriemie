@@ -2,8 +2,6 @@
 
 Ce que fait la préparation des données, dans l'ordre. Tout est réuni dans la fonction `preparer()` du notebook, recopiée à l'identique dans `Predicts.py`.
 
----
-
 ## L'ordre des étapes
 
 | Étape | Colonnes |
@@ -17,8 +15,6 @@ De 53 colonnes au départ à 55 à l'arrivée, soit 53 variables explicatives sa
 
 L'ordre ne peut pas changer. Le nettoyage doit passer en premier, sinon la réparation ne voit pas les valeurs à corriger. Le retrait des indices doit passer en dernier, parce que la réparation s'en sert.
 
----
-
 ## 1. Nettoyer les valeurs impossibles
 
 | Règle | Pourquoi |
@@ -31,8 +27,6 @@ L'ordre ne peut pas changer. Le nettoyage doit passer en premier, sinon la répa
 **On ne touche à rien d'autre.** Les zéros de `BASO`, `EOS`, `MONO`, `NEU` et `LYM` sont réels : un patient peut n'avoir aucun basophile. Et les valeurs très élevées sont des pathologies, pas des erreurs — une lipase à 45 000 est une pancréatite, des CK à 98 000 une rhabdomyolyse.
 
 Règle à retenir : on supprime une valeur **physiologiquement impossible**, jamais une valeur simplement extrême.
-
----
 
 ## 2. Réparer `RBC` et `HCT`
 
@@ -48,13 +42,9 @@ Les indices érythrocytaires sont calculés par l'automate. On inverse les formu
 
 359 valeurs récupérées. Les 37 restantes sont des hémogrammes entièrement absents : pas de source, rien à reconstruire.
 
----
-
 ## 3. Retirer `MCV`, `MCH`, `MCHC`
 
 Ces trois variables sont des fonctions exactes de `HGB`, `HCT` et `RBC`. Une fois qu'elles ont servi à la réparation, elles n'apportent plus rien et sont supprimées.
-
----
 
 ## 4. Les variables construites
 
@@ -68,8 +58,6 @@ Ces trois variables sont des fonctions exactes de `HGB`, `HCT` et `RBC`. Une foi
 | `BUN` / `CREA` | Origine rénale ou pré-rénale |
 
 Le rapport reste manquant quand le dénominateur est nul ou absent — `LYM` vaut zéro chez 90 patients, une division donnerait un infini.
-
----
 
 ## 5. Transformation logarithmique
 
@@ -89,15 +77,11 @@ Le rapport reste manquant quand le dénominateur est nul ou absent — `LYM` vau
 
 Deux cas méritent un mot. `POTASS` sort de la liste tout seul : son asymétrie tombe sous le seuil dès que les valeurs impossibles sont nettoyées. Et `NEUR` est asymétrique **à gauche**, donc le logarithme ne s'applique pas.
 
----
-
 ## 6. Mise à l'échelle
 
 `RobustScaler`, qui centre sur la médiane et divise par l'écart interquartile.
 
 `StandardScaler` utilise la moyenne et l'écart-type, tous deux tirés par les valeurs extrêmes — nombreuses ici, puisqu'elles correspondent à de vraies pathologies. La médiane et l'écart interquartile les ignorent.
-
----
 
 ## 7. Variables écartées du modèle linéaire
 

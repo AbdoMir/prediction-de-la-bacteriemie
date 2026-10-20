@@ -21,3 +21,6 @@ models/
 # Donnees personnelles et article source : le reste de doc/ est versionne
 doc/GroupesIDS2026.xlsx
 doc/article.pdf
+
+# Presentation de soutenance : versionnee hors du depot
+doc/Presentation_Bacteriemie.pptx

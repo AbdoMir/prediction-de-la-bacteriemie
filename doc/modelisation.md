@@ -4,8 +4,6 @@ Comment on passe des données préparées au modèle enregistré. Tout est dans 
 
 La préparation des données est décrite dans [transformation.md](transformation.md).
 
----
-
 ## La stratégie
 
 Quatre temps, dans cet ordre.
@@ -18,8 +16,6 @@ Quatre temps, dans cet ordre.
 | 4. Évaluer | Une seule mesure, définitive | Jeu de test |
 
 **Le jeu de test n'intervient qu'à la dernière étape.** Il représente 20 % des patients, mis de côté au début et jamais consultés avant. C'est la seule garantie que le score annoncé reflète ce qui se passera sur le fichier de l'enseignant.
-
----
 
 ## Les cinq modèles
 
@@ -35,8 +31,6 @@ Les quatre premiers pondèrent les classes. Sans cela, le modèle apprend à tou
 
 Le super-learner, lui, n'est pas pondéré : il reçoit des probabilités déjà corrigées par les quatre autres. Le pondérer à nouveau compterait deux fois le déséquilibre.
 
----
-
 ## Les trois mesures, et laquelle croire
 
 | Mesure | Ce qu'elle juge | Dépend d'un seuil ? |
@@ -51,8 +45,6 @@ C'est le F1 qui sert au classement du défi. Mais il ne se mesure qu'à un seuil
 
 **Conclusion pratique** : avant le réglage du seuil, on compare les modèles sur la précision moyenne. C'est aussi le critère de l'optimisation des hyperparamètres, pour la même raison.
 
----
-
 ## L'optimisation des hyperparamètres
 
 Une optimisation bayésienne : au lieu de tirer des combinaisons au hasard, elle apprend des essais précédents et vise les zones prometteuses.
@@ -63,8 +55,6 @@ Le critère est la précision moyenne, pas le F1 — régler des hyperparamètre
 
 Et une valeur retenue collée à une borne de l'espace de recherche signifie que cet espace est trop étroit : c'est le premier réflexe de contrôle après une recherche.
 
----
-
 ## Le réglage du seuil
 
 `TunedThresholdClassifierCV` cherche le seuil qui maximise le F1, en validation croisée : chaque patient est évalué par un modèle qui ne l'a pas vu à l'entraînement.
@@ -72,8 +62,6 @@ Et une valeur retenue collée à une borne de l'espace de recherche signifie que
 Son intérêt par rapport à une boucle écrite à la main : l'objet renvoyé **est lui-même un classifieur**, dont la prédiction applique déjà le seuil. Il n'y a donc aucun seuil à transporter jusqu'au script de rendu, ni à réappliquer à la main.
 
 Le seuil retenu peut être très éloigné de 0,5, et c'est normal : il se cale sur l'échelle réelle des probabilités du modèle.
-
----
 
 ## Les résultats
 
@@ -129,8 +117,6 @@ Lecture clinique : parmi les patients signalés par le modèle, environ trois su
 
 Un F1 de 0,35 paraît faible, mais le problème est difficile : les deux groupes se recouvrent largement, parce que tous ces patients étaient déjà suspects d'infection.
 
----
-
 ## Les variables qui portent la décision
 
 Mesuré par permutation : on mélange les valeurs d'une colonne au hasard et on regarde de combien le score chute.
@@ -148,18 +134,6 @@ Deux remarques. Le profil est **plat** : aucune variable ne domine, le signal es
 Les pertes se tenant dans un intervalle très resserré, c'est la composition du groupe de tête qu'il faut retenir, pas son ordre exact.
 
 Attention à l'interprétation : deux variables redondantes se partagent le mérite. Mélanger l'une laisse l'autre disponible, donc les deux paraissent faibles alors que l'information compte.
-
----
-
-## Ce qui a été testé puis écarté
-
-| Piste | Résultat |
-|---|---|
-| Donner les variables brutes au super-learner en plus des probabilités | F1 plus faible qu'avec les seules probabilités |
-| Miroir logarithmique de `NEUR` | Corrige la distribution, aucun effet sur le score |
-| Compteurs de valeurs manquantes par panel | Redondants avec les indicateurs de l'imputation |
-
----
 
 ## Le rendu
 
