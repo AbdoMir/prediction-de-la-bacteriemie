@@ -4,6 +4,10 @@ Modèle de classification binaire qui prédit, à partir d'analyses sanguines, s
 
 Le rendu final est un script qui lit un fichier de même structure que les données d'entraînement et produit un CSV à deux colonnes : `ID` et `pred` (0 ou 1). Les groupes sont classés au **F1 score**, puis à la **précision** en cas d'égalité.
 
+## Résumé
+
+La bactériémie, c'est-à-dire la présence de bactéries dans le sang, est une infection grave dont le pronostic dépend de la rapidité du traitement. Son diagnostic repose sur l'hémoculture, un examen qui demande plusieurs jours de culture et dont la grande majorité des prélèvements revient négative : dans la cohorte étudiée, 8 % seulement des patients prélevés sont positifs. Des modèles de risque fondés sur les analyses sanguines de routine ont été proposés pour repérer les patients à très faible risque et épargner des examens inutiles. Leur construction se heurte toutefois à une difficulté : la classe à prédire est rare, et les deux groupes se ressemblent, puisque tous les patients prélevés étaient déjà suspects d'infection. On ignore donc quelle part de la performance tient au choix de l'algorithme plutôt qu'aux décisions de préparation des données et au réglage du seuil de décision. Nous montrons ici que le seuil est le levier déterminant : le même modèle passe d'un F1 de 0,060 à 0,352 lorsque ce seuil est réglé par validation croisée au lieu d'être laissé à 0,5. Le choix de l'algorithme, en comparaison, ne joue qu'à la marge, cinq modèles tenant dans 0,024 de F1, soit l'ordre de grandeur de la variabilité entre plis. La préparation pèse davantage : l'absence d'un dosage est informative, avec 86 % de thrombopénie quand l'indice plaquettaire manque contre 25 % sinon, et les indices érythrocytaires, calculés à partir d'autres mesures, permettent de reconstruire 338 valeurs plutôt que de les imputer. Sur un jeu de test consulté une seule fois, le modèle retenu atteint un F1 de 0,338 et une précision de 0,304, soit près de quatre fois la prévalence. Le plafond vient des données plutôt que des modèles : aucune analyse prise seule ne dépasse 0,70 d'AUC et les deux classes se recouvrent largement. Progresser demanderait d'autres données, cliniques ou temporelles, et un usage hospitalier supposerait une validation sur une autre cohorte ainsi qu'une pondération explicite du coût d'une bactériémie manquée.
+
 ## Données
 
 `data/bacteriemie.csv.gz` : 11 753 patients suspectés de bactériémie à l'Hôpital général de Vienne (Autriche), entre janvier 2006 et décembre 2010, décrits par 53 colonnes.
@@ -28,8 +32,8 @@ Deux fichiers ne sont pas versionnés : `doc/GroupesIDS2026.xlsx`, qui contient 
 Le projet utilise [uv](https://docs.astral.sh/uv/) et Python 3.12.
 
 ```bash
-git clone https://github.com/AbdoMir/pr-diction-de-la-bact-ri-mie.git
-cd pr-diction-de-la-bact-ri-mie
+git clone https://github.com/AbdoMir/prediction-de-la-bacteriemie.git
+cd prediction-de-la-bacteriemie
 uv sync
 ```
 

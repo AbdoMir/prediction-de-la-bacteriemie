@@ -23,4 +23,7 @@ doc/GroupesIDS2026.xlsx
 doc/article.pdf
 
 # Presentation de soutenance : versionnee hors du depot
-doc/Presentation_Bacteriemie.pptx
+doc/*.pptx
+
+# Guide de redaction, document tiers
+doc/nature-summary-paragraph.pdf
