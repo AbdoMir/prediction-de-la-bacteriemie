@@ -41,7 +41,7 @@ Le super-learner, lui, n'est pas pondéré : il reçoit des probabilités déjà
 
 C'est le F1 qui sert au classement du défi. Mais il ne se mesure qu'à un seuil donné, et le seuil par défaut de 0,5 n'a aucune raison d'être le bon quand 8 % des patients sont positifs.
 
-**Un exemple frappant dans nos résultats** : à la première étape, le super-learner obtient le meilleur AUC et le pire F1, 0,049. Ses probabilités restent proches de la prévalence réelle et ne franchissent presque jamais 0,5, donc il ne prédit presque aucun positif. Après réglage du seuil, il passe en tête.
+**Un exemple frappant dans nos résultats** : à la première étape, le super-learner obtient le meilleur AUC et le pire F1, 0,060. Ses probabilités restent proches de la prévalence réelle et ne franchissent presque jamais 0,5, donc il ne prédit presque aucun positif. Après réglage du seuil, il passe en tête.
 
 **Conclusion pratique** : avant le réglage du seuil, on compare les modèles sur la précision moyenne. C'est aussi le critère de l'optimisation des hyperparamètres, pour la même raison.
 
@@ -49,7 +49,7 @@ C'est le F1 qui sert au classement du défi. Mais il ne se mesure qu'à un seuil
 
 Une optimisation bayésienne : au lieu de tirer des combinaisons au hasard, elle apprend des essais précédents et vise les zones prometteuses.
 
-Le critère est la précision moyenne, pas le F1 — régler des hyperparamètres au seuil par défaut reviendrait à juger les modèles sur une décision qui n'est pas encore prise.
+Le critère est la précision moyenne, pas le F1 : régler des hyperparamètres au seuil par défaut reviendrait à juger les modèles sur une décision qui n'est pas encore prise.
 
 **Deux points pratiques.** La recherche dure environ une heure, elle n'est donc lancée qu'une fois : les hyperparamètres retenus sont enregistrés dans `models/`, et les exécutions suivantes les relisent. Le critère et la version de l'espace de recherche figurent dans le nom du fichier, donc en changer l'un ou l'autre invalide le cache automatiquement.
 
@@ -88,7 +88,7 @@ Précision moyenne, avant puis après :
 
 Le boosting est le grand bénéficiaire. La forêt et les arbres extrêmes étaient déjà bien réglés par défaut.
 
-Ces deux colonnes proviennent de la recherche mise en cache, menée avant le retrait de `nb_anomalies`. L'espace de recherche n'ayant pas changé, le cache reste valide et les hyperparamètres sont relus tels quels ; les gains indiqués sont donc ceux mesurés à ce moment-là. Supprimer le fichier de `models/` relancerait la recherche.
+Ces deux colonnes proviennent de la recherche mise en cache. L'espace de recherche n'ayant pas changé, le cache reste valide et les hyperparamètres sont relus tels quels ; les gains indiqués sont donc ceux mesurés à ce moment-là. Supprimer le fichier de `models/` relancerait la recherche.
 
 ### Après réglage du seuil
 

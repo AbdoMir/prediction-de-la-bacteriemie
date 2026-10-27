@@ -8,8 +8,8 @@ Réponses courtes, à dire telles quelles. Deux phrases suffisent pour la plupar
 |---|---|
 | Patients | 11 753, dont 944 malades, soit 8 % |
 | Découpage | 9 402 pour apprendre, 2 351 gardés de côté |
-| Seuil | 0,211 pour l'évaluation, 0,198 pour le modèle livré |
-| Résultat final | F1 0,327, précision 0,300, rappel 0,360, AUC 0,775 |
+| Seuil | 0,205 pour l'évaluation, 0,198 pour le modèle livré |
+| Résultat final | F1 0,338, précision 0,304, rappel 0,381, AUC 0,775 |
 | Fichier rendu | 2 938 patients, 325 signalés, soit 11,1 % |
 
 ## Les données
@@ -86,19 +86,19 @@ Parce que le F1 dépend du seuil, et qu'à ce moment-là le seuil n'est pas enco
 
 **Pourquoi régler le seuil ?**
 
-C'est le plus gros gain du projet. Le super-learner passe de 0,078 à 0,352 de F1, juste en changeant le seuil de 0,5 à 0,211. Aucun autre choix n'a eu autant d'effet.
+C'est le plus gros gain du projet. Le super-learner passe de 0,060 à 0,352 de F1, juste en changeant le seuil de 0,5 à 0,205. Aucun autre choix n'a eu autant d'effet.
 
 **Pourquoi 0,5 ne marche pas ?**
 
 Parce qu'avec 8 % de malades, les probabilités sont presque toujours basses. À 0,5, le modèle ne signale quasiment personne.
 
-**Pourquoi deux seuils, 0,211 et 0,198 ?**
+**Pourquoi deux seuils, 0,205 et 0,198 ?**
 
 Le premier vient du modèle testé sur les 2 351 patients mis de côté. Le second vient du modèle final, réentraîné sur tout le monde : avec plus de données, le seuil idéal bouge un peu. C'est le second qui a servi pour le fichier rendu.
 
 **Le seuil n'est-il pas surajusté ?**
 
-Il est choisi en validation croisée, pas directement sur les données d'entraînement. Et le test le confirme : 0,327 contre 0,352. Il reste un petit optimisme, on le dit.
+Il est choisi en validation croisée, pas directement sur les données d'entraînement. Et le test le confirme : 0,338 contre 0,352. Il reste un petit optimisme, on le dit.
 
 ## Les résultats
 
@@ -116,7 +116,7 @@ Parce qu'on n'a mesuré qu'une seule fois sur le jeu de test. Ça donne un chiff
 
 **Pourquoi le super-learner et pas la forêt ?**
 
-Il gagne de 0,012, alors que le résultat varie de 0,02 d'un découpage à l'autre. L'écart est donc dans le bruit. On l'a choisi, mais la forêt aurait été aussi défendable, et elle est bien plus rapide.
+Il gagne de 0,016, alors que le résultat varie de 0,02 d'un découpage à l'autre. L'écart est donc dans le bruit. On l'a choisi, mais la forêt aurait été aussi défendable, et elle est bien plus rapide.
 
 **Pourquoi 11,1 % de patients signalés alors qu'il y a 8 % de malades ?**
 

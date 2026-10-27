@@ -2,6 +2,8 @@
 
 Ce que fait la préparation des données, dans l'ordre. Tout est réuni dans la fonction `preparer()` du notebook, recopiée à l'identique dans `Predicts.py`.
 
+![Chaîne de préparation](../image/chaine_preparation.png)
+
 ## L'ordre des étapes
 
 | Étape | Colonnes |
@@ -24,7 +26,7 @@ L'ordre ne peut pas changer. Le nettoyage doit passer en premier, sinon la répa
 | `WBC` = 0 → manquant | Aucun globule blanc est impossible |
 | `POTASS` > 10 mmol/L → manquant | Au-delà, le prélèvement est hémolysé |
 
-**On ne touche à rien d'autre.** Les zéros de `BASO`, `EOS`, `MONO`, `NEU` et `LYM` sont réels : un patient peut n'avoir aucun basophile. Et les valeurs très élevées sont des pathologies, pas des erreurs — une lipase à 45 000 est une pancréatite, des CK à 98 000 une rhabdomyolyse.
+**On ne touche à rien d'autre.** Les zéros de `BASO`, `EOS`, `MONO`, `NEU` et `LYM` sont réels : un patient peut n'avoir aucun basophile. Et les valeurs très élevées sont des pathologies, pas des erreurs (une lipase à 45 000 est une pancréatite, des CK à 98 000 une rhabdomyolyse).
 
 Règle à retenir : on supprime une valeur **physiologiquement impossible**, jamais une valeur simplement extrême.
 
@@ -57,11 +59,11 @@ Ces trois variables sont des fonctions exactes de `HGB`, `HCT` et `RBC`. Une foi
 | `CRP` / `ALB` | Inflammation contre dénutrition |
 | `BUN` / `CREA` | Origine rénale ou pré-rénale |
 
-Le rapport reste manquant quand le dénominateur est nul ou absent — `LYM` vaut zéro chez 90 patients, une division donnerait un infini.
+Le rapport reste manquant quand le dénominateur est nul ou absent : `LYM` vaut zéro chez 90 patients, et une division donnerait un infini.
 
 ## 5. Transformation logarithmique
 
-**Critère** : asymétrie strictement supérieure à 1. Pas en valeur absolue — le logarithme corrige une queue à droite, il aggraverait une queue à gauche.
+**Critère** : asymétrie strictement supérieure à 1. Pas en valeur absolue. Le logarithme corrige une queue à droite, il aggraverait une queue à gauche.
 
 **Transformation** : `log(1 + x)` partout, jamais `log(x)`. La différence est négligeable, mais `log(1 + x)` supporte les zéros, et le fichier de test peut en contenir.
 
@@ -81,7 +83,7 @@ Deux cas méritent un mot. `POTASS` sort de la liste tout seul : son asymétrie 
 
 `RobustScaler`, qui centre sur la médiane et divise par l'écart interquartile.
 
-`StandardScaler` utilise la moyenne et l'écart-type, tous deux tirés par les valeurs extrêmes — nombreuses ici, puisqu'elles correspondent à de vraies pathologies. La médiane et l'écart interquartile les ignorent.
+`StandardScaler` utilise la moyenne et l'écart-type, tous deux tirés par les valeurs extrêmes, qui sont nombreuses ici puisqu'elles correspondent à de vraies pathologies. La médiane et l'écart interquartile les ignorent.
 
 ## 7. Variables écartées du modèle linéaire
 
